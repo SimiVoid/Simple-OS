@@ -1,10 +1,10 @@
 #pragma once
 
-#include "types.h"
-#include "lowlevel.h"
+#include "../stdlib/types.h"
+#include "port.h"
 
 #define VGA_WIDTH 80
-#define VGA_HEIGHT 24
+#define VGA_HEIGHT 25
 
 #define VGA_BLACK           0x00
 #define VGA_BLUE            0x01
@@ -29,11 +29,11 @@ uint8_t foregroundColor;
 uint8_t backgraoundColor;
 
 void initVga();
-void clearScreen();
 
 void setColor(uint8_t foreground, uint8_t background);
 uint16_t vgaColorEntry();
 
 void showCursor(bool enable);
 void setCursorPos(uint16_t x, uint16_t y);
+void setCursorPos(uint16_t pos);
 uint64_t getCursorPos();

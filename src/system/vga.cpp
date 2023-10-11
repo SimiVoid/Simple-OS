@@ -1,4 +1,4 @@
-#include "vga.h"
+#include "system/vga.h"
 
 void initVga() {
     VideoMemory = (uint16_t*)0xb8000;
@@ -6,17 +6,6 @@ void initVga() {
     vgaY = 0;
     backgraoundColor = VGA_BLUE;
     foregroundColor = VGA_WHITE;
-
-    clearScreen();
-}
-
-void clearScreen() {
-    for(uint16_t x = 0; x < VGA_WIDTH; ++x)
-        for(uint16_t y = 0; y < VGA_HEIGHT; ++y)
-            VideoMemory[VGA_WIDTH * y + x] = vgaColorEntry() | ' ';
-
-    vgaX = 0;
-    vgaY = 0;
 }
 
 void setColor(uint8_t foreground, uint8_t background) {
@@ -32,7 +21,7 @@ void showCursor(bool enable) {
     if(enable) {
         outb(0x3D4, 0x0A);
 	    outb(0x3D5, (inb(0x3D5) & 0xC0) | 0x00);
- 
+
 	    outb(0x3D4, 0x0B);
 	    outb(0x3D5, (inb(0x3D5) & 0xE0) | 0x0F);
     }
@@ -43,18 +32,31 @@ void showCursor(bool enable) {
 }
 
 void setCursorPos(uint16_t x, uint16_t y) {
-    uint16_t pos = y * VGA_WIDTH + x;
- 
+    if(x >= VGA_WIDTH) x = VGA_WIDTH - 1;
+    if(y >= VGA_HEIGHT) y = VGA_HEIGHT - 1;
+
+	setCursorPos(y * VGA_WIDTH + x);
+}
+
+void setCursorPos(uint16_t pos) {
+    if(pos >= VGA_WIDTH * VGA_HEIGHT) pos = VGA_WIDTH * VGA_HEIGHT - 1;
+
 	outb(0x3D4, 0x0F);
 	outb(0x3D5, (uint8_t) (pos & 0xFF));
 	outb(0x3D4, 0x0E);
 	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+
+    vgaX = pos % VGA_WIDTH;
+    vgaY = (pos - vgaX) / VGA_WIDTH;
 }
 
 uint64_t getCursorPos() {
     uint16_t pos = 0;
 
+    outb(0x3D4, 0x0F);
+    pos |= inb(0x3D5);
+    outb(0x3D4, 0x0E);
+    pos |= ((uint16_t)inb(0x3D5)) << 8;
+
     return pos;
 }
-
-

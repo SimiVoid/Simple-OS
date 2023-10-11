@@ -59,7 +59,7 @@
 #define KEY_RIGHT_SHIFT             0x36
 #define KEY_NUM_STAR                0x37
 #define KEY_LEFT_ALT                0x38
-#define KEY_SPACE                   0x39
+#define KEY_SPACEBAR                0x39
 #define KEY_CAPSLOCK                0x3A
 #define KEY_F1                      0x3B
 #define KEY_F2                      0x3C

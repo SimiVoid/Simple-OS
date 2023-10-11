@@ -1,2 +1,7 @@
-/Simple-OS.iso
-/algorithm.o
+.vscode
+
+build/
+
+*.o
+*.bin
+*.iso

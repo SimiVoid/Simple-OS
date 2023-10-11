@@ -24,9 +24,16 @@ SECTIONS
     
     .bss :
     {
+        . = ALIGN(8);
+        __bss_start__ = .;
         *(.bss)
+        *(COMMON)
+        . = ALIGN (8);
+        __bss_end__ = .;
+        _end = __bss_end__;
+        end = _end;
     }
-    
+
     /DISCARD/ :
     {
         *(.fini_array*)
